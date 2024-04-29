@@ -21,7 +21,7 @@ namespace Medical.Core.Dtos
         [Required]
         [Display (Name ="Full Name")]
         [MaxLength(50)
-            ,RegularExpression((@"^[a-zA-Z0-9_]+$")
+            ,RegularExpression((@"[\p{L}\s]+$")
             ,ErrorMessage ="Only charachtars or numbers or _ only")]
         public string Name { get; set; } = null;
 
@@ -38,35 +38,35 @@ namespace Medical.Core.Dtos
         [Required]
         [Display(Name = "Governrate")]
         [MaxLength(50)
-            ,RegularExpression((@"^[a-zA-Z0-9_]+$")
+            ,RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string Governrate { get; set; } = null;
 
         [Required]
         [Display(Name = "City")]
         [MaxLength(50)
-            , RegularExpression((@"^[a-zA-Z0-9_]+$")
+            , RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string City { get; set; } = null;
 
         [Required]
         [Display(Name = "Address")]
         [MaxLength(250)
-            , RegularExpression((@"^[a-zA-Z0-9_]+$")
+            , RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string Adreess { get; set; } = null;
 
         [Required]
         [Display(Name = "Department")]
         [MaxLength(80)
-            , RegularExpression((@"^[a-zA-Z0-9_]+$")
+            , RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string Department { get; set; } = null;
 
         [Required]
         [Display(Name = "Doctor Degree")]
         [MaxLength(50)
-            , RegularExpression((@"^[a-zA-Z0-9_]+$")
+            , RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string ScienceDegree { get; set; } = null;
 

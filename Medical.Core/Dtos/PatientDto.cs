@@ -27,19 +27,21 @@ namespace Medical.Core.Dtos
         [Required]
         [Display(Name = "First Name")]
         [MaxLength(50)
-            , RegularExpression((@"^[\u0621-\u064A\u0660-\u0669 ]+$")
+            , RegularExpression((@"[\p{L}\s]+$")
             , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string FName { get; set; } = null;
 
         [Required]
         [Display(Name = "Last Name")]
         [MaxLength(50)
-           , RegularExpression((@"^[\u0621-\u064A\u0660-\u0669 ]+$")
+           , RegularExpression((@"[\p{L}\s]+$")
            , ErrorMessage = "Only charachtars or numbers or _ only")]
         public string LName { get; set; } = null;
 
         [Required]
-        [MaxLength(10)]
+        [MaxLength(10)
+            ,RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$"
+            , ErrorMessage = "Date must be in the format dd/mm/yyyy")]
         public string BirthDate { get; set; } = null;
 
         [Required]
