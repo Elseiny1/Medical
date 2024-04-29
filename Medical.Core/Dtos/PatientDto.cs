@@ -17,10 +17,12 @@ namespace Medical.Core.Dtos
         public string Phone { get; set; } = null;
 
         [Required]
+        [Display(Name ="Password")]
         [MinLength(8)]
         public string Password { get; set; } = null;
 
         [Required]
+        [Display(Name ="Confirm Password")]
         [MinLength(8)]
         public string CheckPassword { get; set; } = null;
 
