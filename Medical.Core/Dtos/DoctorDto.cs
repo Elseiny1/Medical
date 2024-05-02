@@ -109,8 +109,7 @@ namespace Medical.Core.Dtos
         public double ReCheckPrie { get; set; }
 
         [AllowNull]
-        [Display(Name = "Image")]
-        [MaxLength(100)]
-        public string ImageUrl { get; set; }
+       
+        public IFormFile Image { get; set; }
     }
 }

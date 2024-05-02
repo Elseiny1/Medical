@@ -47,11 +47,11 @@ namespace Medical.Api.Controllers
         }
 
         [HttpPost("DoctorRegister")]
-        public async Task<IActionResult> DoctorRegisterAsync([FromBody] DoctorDto doctor)
+        public async Task<IActionResult> DoctorRegisterAsync([FromForm] DoctorDto doctor)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
+            
             var model = _mapper.Map<RegisterDTO>(doctor);
             var register = await _authoRepository.RegisterAsync(model, "Doctor");
             if (!register.IsAuthenticated)

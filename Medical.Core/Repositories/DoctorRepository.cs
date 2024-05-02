@@ -20,14 +20,17 @@ namespace Medical.Core.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IAuthoRepository _authoRepository;
         private readonly IMapper _mapper;
+        private readonly IimageRepo _image;
 
         public DoctorRepository(ApplicationDbContext context,
                                IAuthoRepository authoRepository,
-                               IMapper mapper)
+                               IMapper mapper,
+                               IimageRepo image)
         {
             _context = context;
             _authoRepository = authoRepository;
             _mapper = mapper;
+            _image = image;
         }
 
         public async Task<AuthModel> AddDoctorAsync(DoctorDto doctor)
@@ -51,6 +54,7 @@ namespace Medical.Core.Repositories
                 return authModel;
             }
             var newDoctor = _mapper.Map<Doctor>(doctor);
+            newDoctor.ImageUrl = await _image.AddImageAsync(doctor.Image, doctor.Phone);
             var jwtSecurityToken = await _authoRepository.CreateJwtToken(user);
             if (jwtSecurityToken is null)
             {
