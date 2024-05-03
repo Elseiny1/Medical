@@ -25,6 +25,7 @@ namespace Medical.Api.Controllers
         [HttpPost("CreateNewPost")]
         public async Task<IActionResult> CreateNewPost([FromBody] PostDto dto)
         {
+
             return Ok(await _postsRepository.CreateAsync(_mapper.Map<Post>(dto)));
         }
 

@@ -1,32 +1,16 @@
 ﻿using Medical.Core.Interfaces;
 using Medical.EF.Data;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Medical.Core.Repositories
 {
     public class ImageRepo: IimageRepo
     {
-        
+       
 
-        //public async Task<string> AddImageAsync(IFormFile file,string phone)
-        //{
-        //    string fileName;
-        //    string endFile;
-        //    if (file == null)
-        //    {
-        //        fileName = "avatar.png";
-        //        return fileName;
-        //    }
-
-        //    fileName=file.Name;
-        //    endFile = Path.Combine("UsersImages", fileName);
-        //    File.Copy(fileName, endFile);
-
-        //    return fileName;
-        //}
         public async Task<string> AddImageAsync(IFormFile imagefile, string phone)
         {
-
             if (imagefile == null)
             { return "avatar.png"; }
             string imageUrl = phone+imagefile.FileName;
@@ -59,6 +43,12 @@ namespace Medical.Core.Repositories
 
             return imageUrl;//add username at the controller
         }
+        private async Task<bool> IsValidAsync(IFormFile imagefile)
+        {
+            if(imagefile.Length>1024*1024)
+                return false;
 
+            return true;
+        }
     }
 }

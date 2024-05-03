@@ -109,7 +109,11 @@ namespace Medical.Core.Dtos
         public double ReCheckPrie { get; set; }
 
         [AllowNull]
-       
-        public IFormFile Image { get; set; }
+        [DataType(DataType.Upload,
+            ErrorMessage = "Only images Accepted")]
+        [ExtensionsFile(ErrorMessage ="only png, jpeg or jpg is Supported")]
+        [MaxFileSize(1 * 1024 * 1024,
+            ErrorMessage = "Maximum allowed file size is 5 MB.")]
+        public IFormFile? Image { get; set; }
     }
 }
