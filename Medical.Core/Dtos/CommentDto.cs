@@ -11,7 +11,6 @@ namespace Medical.Core.Dtos
     public class CommentDto
     {
         [Required]
-        [ForeignKey("Post")]
         public string? PostId { get; set; } = null;
 
         [Required]
