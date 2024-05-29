@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Medical.EF
@@ -13,6 +14,12 @@ namespace Medical.EF
         public string? Phone { get; set; }
         public string? Role { get; set; }
         public string? Token { get; set; }
-        public DateTime? Expiration { get; set; }
+        //public DateTime? Expiration { get; set; }
+
+        //this annotatin will ignore this field in response
+        [JsonIgnore]
+        public string? RefreshToken { get; set; }
+
+        public DateTime RefreshTokenExpiration { get; set; }
     }
 }

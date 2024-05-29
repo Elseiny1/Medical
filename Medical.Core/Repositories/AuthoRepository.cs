@@ -2,6 +2,7 @@
 using Medical.Core.Helpers;
 using Medical.Core.Interfaces;
 using Medical.EF.Data;
+using Medical.EF.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace Medical.EF.Repositories
 {
@@ -68,11 +70,11 @@ namespace Medical.EF.Repositories
             await _userManager.AddToRoleAsync(user, role);
 
             var JwtSecurityToken = await CreateJwtToken(user);
-
+            
             return new AuthModel
             {
                 Phone = dto.Phone,
-                Expiration = JwtSecurityToken.ValidTo,
+                //Expiration = JwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Role = role,
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken),
@@ -135,9 +137,39 @@ namespace Medical.EF.Repositories
             authModel.Role = _userManager.GetRolesAsync(user).ToString();
             authModel.IsAuthenticated = true;
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            authModel.Expiration = jwtSecurityToken.ValidTo;
+            //authModel.Expiration = jwtSecurityToken.ValidTo;
+
+            if(user.RefreshTokens.Any(t=>t.IsActive))
+            {
+                var activeRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
+                authModel.RefreshToken = activeRefreshToken.Token;
+                authModel.RefreshTokenExpiration = activeRefreshToken.ExpiresOn;
+            }
+            else
+            {
+                var refreshToken = GenerateRefreshToken();
+                authModel.RefreshToken = refreshToken.Token;
+                authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
+                user.RefreshTokens.Add(refreshToken);
+                await _userManager.UpdateAsync(user);
+            }
 
             return authModel;
+        }
+        private RefreshToken GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+
+            using var generator = new RNGCryptoServiceProvider();
+
+            generator.GetBytes(randomNumber);
+
+            return new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomNumber),
+                ExpiresOn = DateTime.UtcNow.AddDays(10),
+                CreatedOn = DateTime.UtcNow
+            };
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Medical.Core.Repositories
             return new AuthModel
             {
                 Phone = user.PhoneNumber,
-                Expiration = jwtSecurityToken.ValidTo,
+                //Expiration = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Role = "Doctor",
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),

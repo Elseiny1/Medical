@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Medical.Api.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AuthoController : ControllerBase
