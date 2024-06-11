@@ -77,9 +77,39 @@ namespace Medical.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
+            if (string.IsNullOrEmpty(result.Message))
+                SetRefreshTokenCookie(result.RefreshToken, result.RefreshTokenExpiration);
+
             return Ok(result);
         }
 
+        [HttpGet("refreshToken")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            //get token from cookis
+            var refreshToken = Request.Cookies[key: "refreshToken"];
 
+            var result = await _authoRepository.RefreshTokenAsync(refreshToken);
+
+            if(!result.IsAuthenticated)
+                return BadRequest(result);
+
+            SetRefreshTokenCookie(result.RefreshToken, result.RefreshTokenExpiration);
+
+            return Ok(result);
+
+        }
+
+        private void SetRefreshTokenCookie(string refreshToken, DateTime expires)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = expires.ToLocalTime()
+            };
+
+            Response.Cookies.Append(key: "refreshToken", refreshToken, cookieOptions); 
+
+        }
     }
 }

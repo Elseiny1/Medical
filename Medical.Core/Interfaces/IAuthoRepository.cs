@@ -15,6 +15,8 @@ namespace Medical.Core.Interfaces
 
         public Task<ApplicationIdentityUser> GetUser(string phone);
 
+        public Task<AuthModel> RefreshTokenAsync(string token);
+
         public Task<AuthModel> GetTokenAsync(LogInDTO model);
     }
 }

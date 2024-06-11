@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medical.EF.Repositories
 {
@@ -171,5 +172,50 @@ namespace Medical.EF.Repositories
                 CreatedOn = DateTime.UtcNow
             };
         }
+
+        public async Task<AuthModel> RefreshTokenAsync(string token)
+        {
+            var authModel=new AuthModel();
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+
+            if(user ==null)
+            {
+                
+                authModel.Message = "Invalid token";
+
+                return authModel;
+            }
+
+            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            if(!refreshToken.IsActive)
+            {
+                
+                authModel.Message = "Inactive token";
+                return authModel;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.Single();
+            
+            //Revoke for each token use
+            //generate new refreash token after revoke
+            //generate new jwt to be retrun with user
+
+            refreshToken.RevokedOn=DateTime.UtcNow;
+
+            var newRefreshToken = GenerateRefreshToken();
+            user.RefreshTokens.Add(newRefreshToken);
+            await _userManager.UpdateAsync(user);
+
+            var jwtToken = await CreateJwtToken(user);
+            authModel.IsAuthenticated = true;
+            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            authModel.Phone = user.PhoneNumber;
+            authModel.Role = role;
+            authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
+
+            return authModel;
+        }
+        
     }
 }
