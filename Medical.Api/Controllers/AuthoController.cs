@@ -100,6 +100,20 @@ namespace Medical.Api.Controllers
 
         }
 
+        [HttpPost("revokeToken")]
+        public async Task<IActionResult> LogOut([FromBody] RevokeToken model)
+        {
+            var token = model.Token ?? Request.Cookies[key: "refreshToken"];
+            if (!string.IsNullOrEmpty(token))
+                return BadRequest("Token is required");
+
+            var result=await _authoRepository.RevokeTokenAsync(token);
+            if(!result)
+                return BadRequest("Token is Invalid");
+
+            return Ok("loged out success");
+
+        }
         private void SetRefreshTokenCookie(string refreshToken, DateTime expires)
         {
             var cookieOptions = new CookieOptions
