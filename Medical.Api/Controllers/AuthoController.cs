@@ -44,6 +44,8 @@ namespace Medical.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
+            SetRefreshTokenCookie(result.RefreshToken, result.RefreshTokenExpiration);
+
             return Ok(result);
         }
 
@@ -62,6 +64,8 @@ namespace Medical.Api.Controllers
 
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
+
+            SetRefreshTokenCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
             return Ok(result);
         }
