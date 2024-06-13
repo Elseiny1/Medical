@@ -84,7 +84,7 @@ namespace Medical.Core.Repositories
                 IsAuthenticated = true,
                 Role = "Patient",
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                Message = "Token Created Succesfully"
+                
             };
         }
 

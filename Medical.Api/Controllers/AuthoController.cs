@@ -77,7 +77,7 @@ namespace Medical.Api.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
-            if (string.IsNullOrEmpty(result.Message))
+            if (!string.IsNullOrEmpty(result.RefreshToken))
                 SetRefreshTokenCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
             return Ok(result);
@@ -104,7 +104,7 @@ namespace Medical.Api.Controllers
         public async Task<IActionResult> LogOut([FromBody] RevokeToken model)
         {
             var token = model.Token ?? Request.Cookies[key: "refreshToken"];
-            if (!string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
                 return BadRequest("Token is required");
 
             var result=await _authoRepository.RevokeTokenAsync(token);

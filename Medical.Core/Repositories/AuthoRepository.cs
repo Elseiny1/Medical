@@ -171,6 +171,7 @@ namespace Medical.EF.Repositories
             return new RefreshToken
             {
                 Token = Convert.ToBase64String(randomNumber),
+                
                 ExpiresOn = DateTime.UtcNow.AddDays(10),
                 CreatedOn = DateTime.UtcNow
             };
@@ -183,16 +184,15 @@ namespace Medical.EF.Repositories
 
             if(user ==null)
             {
-                
+                authModel.IsAuthenticated = false;
                 authModel.Message = "Invalid token";
-
                 return authModel;
             }
 
             var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
-            if(!refreshToken.IsActive)
+            if(refreshToken.IsActive==false)
             {
-                
+                authModel.IsAuthenticated = false;
                 authModel.Message = "Inactive token";
                 return authModel;
             }
@@ -215,6 +215,7 @@ namespace Medical.EF.Repositories
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             authModel.Phone = user.PhoneNumber;
             authModel.Role = role;
+            authModel.RefreshToken = newRefreshToken.Token;
             authModel.RefreshTokenExpiration = newRefreshToken.ExpiresOn;
 
             return authModel;
