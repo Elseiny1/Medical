@@ -36,7 +36,7 @@ namespace Medical.Core.Dtos
 
         [Required]
         [MaxLength(7)
-            , RegularExpression(@"^[0-12]$"
+            , RegularExpression((@"^([01]?[0-9]):([0-5][0-9])$")
             , ErrorMessage = "Only hours 0 to 12")]
         public string Time { get; set; }
 
